@@ -5,7 +5,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 ACCESS_KEY: str = "ridfebb9"
-NEX_VERSION: int = 200
+NEX_VERSION: int = 20000
 
 async def main():
 	s = settings.load("friends")
