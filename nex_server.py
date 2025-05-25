@@ -92,7 +92,7 @@ class AuthenticationServer(authentication.AuthenticationServer):
 		return ticket.encrypt(user_key, settings)
 		
 
-class SecureConnection(secure.SecureConnectionServer):
+class SecureServer(secure.SecureConnectionServer):
 	def __init__(self, settings):
 		super().__init__()
 		self.settings = settings
@@ -145,7 +145,7 @@ async def main():
 		AuthenticationServer(s),
 	]
 	secure_servers = [
-		SecureConnection(s),
+		SecureServer(s),
 		MatchmakingServer(s),
 	]
 	
