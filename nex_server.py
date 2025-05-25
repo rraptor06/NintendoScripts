@@ -1,5 +1,6 @@
 from nintendo.nex import rmc, kerberos, friends, \
-	authentication, common, settings
+	authentication, common, settings, secure, matchmaking
+from anyio import Lock
 import collections
 import secrets
 import aioconsole
@@ -67,6 +68,9 @@ class AuthenticationServer(authentication.AuthenticationServer):
 		response.connection_data = conn_data
 		response.server_name = BUILD_STRING
 		return response
+	
+	async def login_ex(self, client, username, extra_data):
+		return self.login(client, username)
 		
 	def generate_ticket(self, source, target):
 		settings = self.settings
@@ -88,8 +92,49 @@ class AuthenticationServer(authentication.AuthenticationServer):
 		return ticket.encrypt(user_key, settings)
 		
 
-class FriendsServer(friends.FriendsServerV1):
-	pass
+class SecureConnection(secure.SecureConnectionServer):
+	def __init__(self, settings):
+		super().__init__()
+		self.settings = settings
+		self.connection_id_counter = 1
+		self.connection_id_lock = Lock()
+		self.clients = {}
+
+	async def register(self, client: rmc.RMCClient, urls: list[common.StationURL]):
+		addr = client.remote_address()
+		station = urls[0].copy()
+		
+		async with self.connection_id_lock:
+			cid = self.connection_id_counter
+			client.client.user_cid = cid
+			self.clients[cid] = client
+
+			self.connection_id_counter += 1
+	
+		station["address"] = addr[0]
+		station["port"] = addr[1]
+		station["natf"] = 0
+		station["natm"] = 0
+		station["type"] = 3
+		station["PID"] = client.pid()
+
+		response = rmc.RMCResponse()
+		response.result = common.Result.success()
+		response.connection_id = cid
+		response.public_station = station
+
+		return response
+
+	async def register_ex(self, client: rmc.RMCClient, urls: list[common.StationURL], login_data):
+		return await self.register(client, urls)
+	
+
+class MatchmakingServer(matchmaking.MatchMakingServer):
+	def __init__(self, settings):
+		super().__init__()
+		self.settings = settings
+
+	# TODO: Add more features
 
 
 async def main():
@@ -97,10 +142,11 @@ async def main():
 	s.configure(ACCESS_KEY, NEX_VERSION)
 	
 	auth_servers = [
-		AuthenticationServer(s)
+		AuthenticationServer(s),
 	]
 	secure_servers = [
-		FriendsServer()
+		SecureConnection(s),
+		MatchmakingServer(s),
 	]
 	
 	server_key = derive_key(get_user_by_name(SECURE_SERVER))
