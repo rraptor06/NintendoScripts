@@ -8,3 +8,6 @@ To run these scripts you need to have:
 
 ## WARNING
 - The folder NEX is just a test NEX Library, please don't use it. The code is very bad.
+
+## NEX DOCS
+- [here](https://github.com/rraptor06/NintendoScripts/edit/main/nex/NEX.md)
