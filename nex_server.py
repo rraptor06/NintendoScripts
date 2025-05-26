@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 ACCESS_KEY = "ridfebb9"
 NEX_VERSION = 20000
 SECURE_SERVER = "Quazal Rendez-Vous"
-BUILD_STRING = "Example Server"
+BUILD_STRING = "NEX Friends Server"
 
 User = collections.namedtuple("User", "pid name password")
 
@@ -129,12 +129,19 @@ class SecureServer(secure.SecureConnectionServer):
 		return await self.register(client, urls)
 	
 
-class MatchmakingServer(matchmaking.MatchMakingServer):
+class FriendsServer3DS(friends.FriendsServerV1):
 	def __init__(self, settings):
 		super().__init__()
 		self.settings = settings
 
-	# TODO: Add more features
+
+class FriendsServerWiiU(friends.FriendsServerV2):
+	def __init__(self, settings):
+		super().__init__()
+		self.settings = settings
+
+	def add_friend_request(self, client):
+		pass
 
 
 async def main():
@@ -146,7 +153,8 @@ async def main():
 	]
 	secure_servers = [
 		SecureServer(s),
-		MatchmakingServer(s),
+		FriendsServer3DS(s),
+		FriendsServer3DS(s),
 	]
 	
 	server_key = derive_key(get_user_by_name(SECURE_SERVER))
