@@ -154,7 +154,7 @@ async def main():
 	secure_servers = [
 		SecureServer(s),
 		FriendsServer3DS(s),
-		FriendsServer3DS(s),
+		FriendsServerWiiU(s),
 	]
 	
 	server_key = derive_key(get_user_by_name(SECURE_SERVER))
