@@ -4,8 +4,8 @@ import anyio
 import logging
 logging.basicConfig(level=logging.INFO)
 
-ACCESS_KEY: str = "ridfebb9"
-NEX_VERSION: int = 20000
+ACCESS_KEY = "ridfebb9"
+NEX_VERSION = 20000
 
 async def main():
 	s = settings.load("friends")
