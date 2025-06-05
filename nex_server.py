@@ -1,5 +1,5 @@
 from nintendo.nex import rmc, kerberos, friends, \
-	authentication, common, settings, secure, matchmaking
+	authentication, common, settings, secure
 from anyio import Lock
 import collections
 import secrets

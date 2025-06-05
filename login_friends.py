@@ -1,7 +1,7 @@
 from nintendo.nex import backend, settings
 import anyio
-
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 ACCESS_KEY = "ridfebb9"
