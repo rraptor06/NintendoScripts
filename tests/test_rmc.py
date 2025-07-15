@@ -12,7 +12,7 @@ if __name__ == "__main__":
     msg.body = b"Hello, world!"
 
     encoded_data = msg.encode()
-    print(f"Encoded data bytes: {encoded_data}")
+    print(f"Encoded data: {encoded_data.hex()}")
 
     decoded_msg = rmc.RMCMessage(s)
     decoded_msg.decode(encoded_data)
