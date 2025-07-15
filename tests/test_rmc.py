@@ -5,8 +5,8 @@ if __name__ == "__main__":
     s = settings.default()
     msg = rmc.RMCMessage(s)
 
-    msg.protocol = 1
     msg.mode = msg.REQUEST
+    msg.protocol = 1
     msg.call_id = 42
     msg.method = 123
     msg.body = b"Hello, world!"
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     decoded_msg = rmc.RMCMessage(s)
     decoded_msg.decode(encoded_data)
 
-    print("Message décodé :")
+    print("Decoded data:")
     print("Protocol:", decoded_msg.protocol)
     print("Mode:", "REQUEST" if decoded_msg.mode == decoded_msg.REQUEST else "RESPONSE")
     print("Call ID:", decoded_msg.call_id)
